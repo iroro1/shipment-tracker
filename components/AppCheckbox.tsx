@@ -6,10 +6,18 @@ const AppCheckbox = ({
   label,
   onChange,
   checked = false,
+  bg = "white",
+  activeBg = "#2F50C1",
+  otherStyles = {},
+  checkStyles = {},
 }: {
-  label: string;
+  label?: string;
   onChange: (checked: boolean) => void;
   checked?: boolean;
+  bg?: string;
+  activeBg?: string;
+  otherStyles?: any;
+  checkStyles?: any;
 }) => {
   const [isChecked, setIsChecked] = useState(checked);
 
@@ -24,12 +32,13 @@ const AppCheckbox = ({
       <View
         style={[
           tw`w-[20px] h-[20px] border border-[#D0D5DD] rounded`,
-          isChecked && { backgroundColor: "#2F50C1" },
+          isChecked ? { backgroundColor: activeBg } : { backgroundColor: bg },
+          { ...otherStyles },
         ]}
       >
         {isChecked && (
-          <View style={styles.checkmarkContainer}>
-            <Text style={styles.checkmark}>✓</Text>
+          <View style={[styles.checkmarkContainer]}>
+            <Text style={[styles.checkmark, checkStyles]}>✓</Text>
           </View>
         )}
       </View>

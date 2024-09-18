@@ -19,7 +19,7 @@ export default function SplashScreen() {
     <View style={tw`flex-1 justify-center items-center bg-white`}>
       <MotiView
         from={{ scale: 0.5 }}
-        animate={{ scale: 2 }}
+        animate={{ scale: 3 }}
         transition={{ type: "timing", duration: 2000 }}
         style={tw`justify-center items-center`}
       >

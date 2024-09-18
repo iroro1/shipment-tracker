@@ -4,11 +4,12 @@ import tw from "twrnc";
 import AppButton from "../components/AppButton";
 import { StatusBar } from "expo-status-bar";
 import LoginComponent from "../components/LoginComponent";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const LandingScreen = () => {
   const [loginModal, setLoginModal] = useState(false);
   return (
-    <View style={tw`flex-1 justify-center items-center bg-[#2F50C1]`}>
+    <SafeAreaView style={tw`flex-1 justify-center items-center bg-[#2F50C1]`}>
       <StatusBar style="light" />
       <Image
         source={require("../assets/images/textLogo.png")}
@@ -35,14 +36,18 @@ const LandingScreen = () => {
         animationType="slide"
         transparent
         onRequestClose={() => setLoginModal(false)}
-        presentationStyle="formSheet"
       >
-        <LoginComponent closeModal={() => setLoginModal(false)} />
+        <View
+          style={{
+            marginTop: 60,
+            flex: 1,
+          }}
+        >
+          <LoginComponent closeModal={() => setLoginModal(false)} />
+        </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default LandingScreen;
-
-const styles = StyleSheet.create({});

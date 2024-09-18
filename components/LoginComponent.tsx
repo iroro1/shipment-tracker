@@ -20,13 +20,13 @@ export default function LoginComponent({
   const handleLogin = () => {
     // const user = { username };
     // dispatch(login(user));
-    closeModal();
     navigation.navigate("ShipmentList");
+    closeModal();
     // Navigate to ShipmentList screen
   };
   const disabled = url === "" || username === "" || password === "";
   return (
-    <View style={tw`flex-1   bg-white px-[16px]`}>
+    <View style={tw`flex-1 rounded-t-[20px] bg-white px-[16px]`}>
       <TouchableOpacity
         onPress={() => closeModal()}
         style={tw` top-0 left-0 py-4 flex flex-row w-full items-center gap-[3px]`}

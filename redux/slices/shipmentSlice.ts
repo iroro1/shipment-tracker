@@ -15,10 +15,13 @@ interface Shipment {
   _comments?: string | null;
   _assign?: string | null;
   _liked_by?: string | null;
+  selected?: boolean;
 }
 
 interface ShipmentState {
   shipments: Shipment[];
+  fiterModalOpen: boolean;
+  addScanModalOpen: boolean;
 }
 
 const initialState: ShipmentState = {
@@ -72,6 +75,8 @@ const initialState: ShipmentState = {
       _liked_by: null,
     },
   ],
+  addScanModalOpen: false,
+  fiterModalOpen: false,
 };
 
 const shipmentSlice = createSlice({
@@ -91,8 +96,33 @@ const shipmentSlice = createSlice({
         shipment.status = status;
       }
     },
+    toggleFilterModal: (state) => {
+      state.fiterModalOpen = !state.fiterModalOpen;
+    },
+    toggleAddScanModal: (state) => {
+      state.addScanModalOpen = !state.addScanModalOpen;
+    },
+    toggleSelectShipment: (state, action) => {
+      const shipment = state.shipments.find((s) => s.id === action.payload);
+      if (shipment) {
+        shipment.selected = !shipment.selected;
+      }
+    },
+    markAllShipmentAsSelected: (state) => {
+      //  toggle between markAll adn deselect all
+      state.shipments.forEach((shipment) => {
+        shipment.selected = true;
+      });
+    },
   },
 });
 
-export const { setShipments, updateShipmentStatus } = shipmentSlice.actions;
+export const {
+  setShipments,
+  updateShipmentStatus,
+  toggleFilterModal,
+  toggleAddScanModal,
+  toggleSelectShipment,
+  markAllShipmentAsSelected,
+} = shipmentSlice.actions;
 export default shipmentSlice.reducer;

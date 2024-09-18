@@ -39,7 +39,7 @@ const AppSearch = ({
       />
       <TextInput
         style={[
-          tw` w-full flex-1  bg-[#F4F2F8]/50 text-[16px] text-[#2F50C1] h-[44px] px-[18px] rounded-[6px]`,
+          tw` w-full flex-1  bg-[#F4F2F8]/50 text-[16px] text-[#2F50C1] h-[44px] px-[18px] pl-[40px] rounded-[6px]`,
           { borderColor, borderWidth: 1 },
         ]}
         value={value}
@@ -47,32 +47,8 @@ const AppSearch = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholderTextColor={"#A7A3B3"}
+        placeholder={placeholder}
       />
-      <Animated.Text
-        style={[
-          tw`absolute ${value ? "hidden" : ""} left-[${
-            isFocused ? "18px" : "50px"
-          }] top-[${isFocused ? "22px" : "14px"}] text-[${
-            !isFocused ? "16px" : "11px"
-          }] text-[#58536E]`,
-          {
-            opacity: placeholderPosition.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 1],
-            }),
-            transform: [
-              {
-                translateY: placeholderPosition.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, -20],
-                }),
-              },
-            ],
-          },
-        ]}
-      >
-        {placeholder}
-      </Animated.Text>
     </View>
   );
 };

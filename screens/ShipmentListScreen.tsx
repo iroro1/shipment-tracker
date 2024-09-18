@@ -1,48 +1,26 @@
-import React from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  Button,
-  Image,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../redux/rootReducer";
-import { updateShipmentStatus } from "../redux/slices/shipmentSlice";
-import tw from "twrnc";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import AppSearch from "../components/AppSearch";
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
+import tw from "twrnc";
 import AppCheckbox from "../components/AppCheckbox";
+import AppSearch from "../components/AppSearch";
 import ShipmentCard from "../components/ShipmentCard";
+import { RootState } from "../redux/rootReducer";
+import {
+  markAllShipmentAsSelected,
+  toggleAddScanModal,
+  toggleFilterModal,
+} from "../redux/slices/shipmentSlice";
 
 export default function ShipmentListScreen() {
   const dispatch = useDispatch();
   const shipments = useSelector((state: RootState) => state.shipment.shipments);
 
-  const renderShipment = ({
-    item,
-  }: {
-    item: { id: number; name: string; status: string };
-  }) => (
-    <View style={tw`p-4 border-b border-gray-200`}>
-      <Text style={tw`text-lg`}>{item.name}</Text>
-      <Text>Status: {item.status}</Text>
-      <Button
-        title="Mark as Received"
-        onPress={() =>
-          dispatch(updateShipmentStatus({ id: item.id, status: "Received" }))
-        }
-      />
-    </View>
-  );
-
   return (
-    <SafeAreaView style={tw`flex-1 bg-white p-[16px]`}>
-      <StatusBar style="auto" />
+    <View style={tw`flex-1 px-[16px] bg-white`}>
       <View style={tw`flex-row justify-between items-center`}>
         <Image
           style={tw`w-[40px] h-[40px]`}
@@ -72,6 +50,7 @@ export default function ShipmentListScreen() {
 
         <View style={tw`flex-row justify-between mt-[12px]`}>
           <TouchableOpacity
+            onPress={() => dispatch(toggleFilterModal())}
             style={tw`bg-[#F4F2F8] h-[44px] rounded-[10px] w-[48%] max-w-[173px] gap-[8px] flex-row items-center justify-center`}
           >
             <Image
@@ -81,6 +60,7 @@ export default function ShipmentListScreen() {
             <Text>Filters</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => dispatch(toggleAddScanModal())}
             style={tw`bg-[#2F50C1] h-[44px] rounded-[10px] w-[173px] gap-[8px] flex-row items-center justify-center`}
           >
             <Image
@@ -99,17 +79,24 @@ export default function ShipmentListScreen() {
             Shipments
           </Text>
 
-          <AppCheckbox label="Mark All" onChange={() => {}} checked={false} />
+          <AppCheckbox
+            label="Mark All"
+            onChange={() => {
+              dispatch(markAllShipmentAsSelected());
+            }}
+            checked={false}
+          />
         </View>
       </View>
 
       <FlatList
+        style={tw`mt-[12px]`}
         data={shipments}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <ShipmentCard data={item} />}
-        refreshing={false} // Set this to true if implementing pull-to-refresh
+        keyExtractor={(item: any) => item.id.toString()}
+        renderItem={({ item }: any) => <ShipmentCard data={item} />}
+        refreshing={false}
         onRefresh={() => {}}
       />
-    </SafeAreaView>
+    </View>
   );
 }
