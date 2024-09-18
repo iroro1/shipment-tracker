@@ -22,6 +22,7 @@ const AppCheckbox = ({
   useDefault?: boolean;
 }) => {
   const [isChecked, setIsChecked] = useState(checked);
+  console.log(isChecked, "11");
 
   const handlePress = () => {
     const newCheckedState = !isChecked;

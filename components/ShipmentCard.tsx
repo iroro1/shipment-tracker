@@ -25,11 +25,6 @@ const ShipmentCard = ({ data }: { data: any }) => {
       console.log(response.response.message, "fil");
 
       if (response.status === 200) {
-        // const stat = response.response.message.filter(
-        //   (itm: any) => itm.name === data.status
-        // );
-        // console.log(stat, 222);
-        // setStatus(stat);
       }
     } catch (error) {}
   };
@@ -37,15 +32,13 @@ const ShipmentCard = ({ data }: { data: any }) => {
     loadStatusData();
   }, []);
 
-  // console.log(status, 2);
-
   return (
     <View
       style={tw`min-h-[67px] w-full rounded-[8px] border border-[${
         data?.selected && !isExpanded ? "#2F50C1" : "#D0D5DD"
-      }]  mb-[8px] bg-[#F4F2F8] overflow-hidden`}
+      }]  mb-[8px]  overflow-hidden `}
     >
-      <View style={tw`flex-row p-[12px] items-center`}>
+      <View style={tw`flex-row p-[12px] bg-[#F4F2F8] items-center`}>
         <View style={tw`flex-row items-center`}>
           <AppCheckbox
             bg="white"
@@ -62,7 +55,6 @@ const ShipmentCard = ({ data }: { data: any }) => {
             onChange={() => {
               dispatch(toggleSelectShipment(data?.id));
             }}
-            useDefault={true}
           />
           <Image
             resizeMode="contain"
@@ -85,7 +77,7 @@ const ShipmentCard = ({ data }: { data: any }) => {
             </View>
           </View>
         </View>
-        <View style={tw`ml-auto flex-row items-center gap-1`}>
+        <View style={tw`ml-auto flex-row items-center gap-[0.6px]`}>
           <View
             style={tw`flex-row items-center gap-1 h-[23px] border border-[#D0D5DD] rounded-[4px] p-1`}
           >
@@ -95,9 +87,9 @@ const ShipmentCard = ({ data }: { data: any }) => {
           <TouchableOpacity
             onPress={() => setIsExpanded(!isExpanded)}
             style={[
-              tw`h-[30px] w-[30px] ${
+              tw`h-[25px] w-[25px] ${
                 isExpanded
-                  ? "bg-[#2F50C1]/70 border-[4px] border-white"
+                  ? "bg-[#2F50C1]/70 border-[2px] border-white"
                   : "bg-white"
               } flex-row-reverse rounded-full items-center justify-center `,
               {
@@ -121,12 +113,9 @@ const ShipmentCard = ({ data }: { data: any }) => {
       {isExpanded && (
         <View
           style={[
-            tw` p-[12px] z-10  rounded-b-[8px]  border-[#2F50C1] bg-[#fff]`,
-            {
-              borderStyle: "dashed",
-              borderColor: "#2F50C1",
-              borderWidth: data?.selected ? 1 : 0,
-            },
+            tw` p-[12px] z-50  rounded-b-[8px] border bg-[#F4F2F8]/40 border-r-0 border-l-0 border-b-0 ${
+              data.selected ? "border-[#2F50C1]" : "border-[#eee]"
+            }`,
           ]}
         >
           <View style={tw`flex-row items-center justify-between`}>

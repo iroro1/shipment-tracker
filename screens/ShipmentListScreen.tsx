@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
   FlatList,
   Image,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -27,6 +28,7 @@ export default function ShipmentListScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const shipments = useSelector((state: RootState) => state.shipment.shipments);
   const auth: any = useSelector((state: RootState) => state.auth);
+  const [temp, setTemp] = useState([]);
 
   const loadShipments = async () => {
     setIsLoading(true);
@@ -53,7 +55,9 @@ export default function ShipmentListScreen() {
   useEffect(() => {
     loadShipments();
   }, []);
-  const handleSelectAll = () => {};
+
+  console.log(temp);
+
   return (
     <View style={tw`flex-1 px-[16px] bg-white`}>
       <View style={tw`flex-row justify-between items-center`}>
@@ -79,7 +83,9 @@ export default function ShipmentListScreen() {
 
         <AppSearch
           placeholder="Search"
-          onChangeText={(value) => console.log(value)}
+          onChangeText={(value) => {
+            setTemp(shipments.filter((itm) => itm.barcode.includes(value)));
+          }}
         />
 
         <View style={tw`flex-row justify-between mt-[12px]`}>
@@ -113,19 +119,32 @@ export default function ShipmentListScreen() {
             Shipments
           </Text>
 
-          <AppCheckbox
-            label="Mark All"
-            onChange={() => {
+          <TouchableOpacity
+            style={tw`flex-row items-center`}
+            onPress={() => {
               dispatch(markAllShipmentAsSelected());
             }}
-            checkStyles={{ color: "#fff" }}
-          />
+          >
+            <View
+              style={[
+                tw`w-[20px] h-[20px] border border-[#D0D5DD] rounded`,
+                shipments.filter((itm) => itm.selected).length > 0
+                  ? { backgroundColor: "#2F50C1" }
+                  : { backgroundColor: "#fff" },
+              ]}
+            >
+              <View style={[styles.checkmarkContainer]}>
+                <Text style={[styles.checkmark]}>✓</Text>
+              </View>
+            </View>
+            <Text style={tw`ml-2 text-[#2F50C1] text-[16px]`}>Mark All</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
       <FlatList
         style={tw`mt-[12px]`}
-        data={shipments}
+        data={temp.length > 0 ? temp : shipments}
         keyExtractor={(item: any) => item.id}
         renderItem={({ item }: any) => <ShipmentCard data={item} />}
         refreshing={isLoading}
@@ -136,3 +155,15 @@ export default function ShipmentListScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  checkmarkContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  checkmark: {
+    color: "#FFFFFF",
+    fontSize: 16,
+  },
+});
