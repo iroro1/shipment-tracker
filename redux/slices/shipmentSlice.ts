@@ -25,56 +25,7 @@ interface ShipmentState {
 }
 
 const initialState: ShipmentState = {
-  shipments: [
-    {
-      id: 1,
-      name: "New ShipmentTT",
-      creation: "2023-02-21 11:53:33.952548",
-      modified: "2024-03-21 11:43:05.485522",
-      modified_by: "Administrator",
-      owner: "ahmed.fathy@brandimic.com",
-      docstatus: 0,
-      idx: 1,
-      status: "New ShipmentTT",
-      color: "#761ACB",
-      _user_tags: null,
-      _comments: null,
-      _assign: null,
-      _liked_by: null,
-    },
-    {
-      id: 2,
-      name: "PUP",
-      creation: "2024-02-05 12:50:28.231753",
-      modified: "2024-02-05 12:50:28.231753",
-      modified_by: "Administrator",
-      owner: "Administrator",
-      docstatus: 0,
-      idx: 0,
-      status: "PUP",
-      color: "#CB2929",
-      _user_tags: null,
-      _comments: null,
-      _assign: null,
-      _liked_by: null,
-    },
-    {
-      id: 3,
-      name: "test status",
-      creation: "2024-01-22 10:03:29.564104",
-      modified: "2024-01-22 10:03:29.564104",
-      modified_by: "Administrator",
-      owner: "Administrator",
-      docstatus: 0,
-      idx: 0,
-      status: "test status",
-      color: "#CB2929",
-      _user_tags: null,
-      _comments: null,
-      _assign: null,
-      _liked_by: null,
-    },
-  ],
+  shipments: [],
   addScanModalOpen: false,
   fiterModalOpen: false,
 };
@@ -109,9 +60,14 @@ const shipmentSlice = createSlice({
       }
     },
     markAllShipmentAsSelected: (state) => {
-      //  toggle between markAll adn deselect all
+      // toggle all shipment as selected or unselected
+      const count = state.shipments.filter((s) => s.selected);
       state.shipments.forEach((shipment) => {
-        shipment.selected = true;
+        if (count.length > 0) {
+          shipment.selected = false;
+        } else {
+          shipment.selected = true;
+        }
       });
     },
   },

@@ -10,6 +10,7 @@ const AppCheckbox = ({
   activeBg = "#2F50C1",
   otherStyles = {},
   checkStyles = {},
+  useDefault = true,
 }: {
   label?: string;
   onChange: (checked: boolean) => void;
@@ -18,6 +19,7 @@ const AppCheckbox = ({
   activeBg?: string;
   otherStyles?: any;
   checkStyles?: any;
+  useDefault?: boolean;
 }) => {
   const [isChecked, setIsChecked] = useState(checked);
 
@@ -36,9 +38,14 @@ const AppCheckbox = ({
           { ...otherStyles },
         ]}
       >
-        {isChecked && (
+        {useDefault && (
           <View style={[styles.checkmarkContainer]}>
-            <Text style={[styles.checkmark, checkStyles]}>✓</Text>
+            <Text style={[styles.checkmark, { ...checkStyles }]}>✓</Text>
+          </View>
+        )}
+        {!useDefault && (
+          <View style={[styles.checkmarkContainer]}>
+            <Text style={[styles.checkmark, { ...checkStyles }]}>✓</Text>
           </View>
         )}
       </View>

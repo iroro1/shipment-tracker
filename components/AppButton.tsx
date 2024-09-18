@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import tw from "twrnc";
 const AppButton = ({
@@ -15,6 +21,7 @@ const AppButton = ({
   disabled = false,
   diabledBg = "gray",
   disabledColor = "white",
+  loading,
 }: {
   title: string;
   bg?: string;
@@ -29,6 +36,7 @@ const AppButton = ({
   disabled?: boolean;
   diabledBg?: string;
   disabledColor?: string;
+  loading?: boolean;
 }) => {
   return (
     <TouchableOpacity
@@ -44,6 +52,7 @@ const AppButton = ({
       >
         {title}
       </Text>
+      {loading && <ActivityIndicator size="small" color={color} />}
     </TouchableOpacity>
   );
 };

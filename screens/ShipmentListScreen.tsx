@@ -1,8 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import tw from "twrnc";
 import AppCheckbox from "../components/AppCheckbox";
@@ -11,14 +16,44 @@ import ShipmentCard from "../components/ShipmentCard";
 import { RootState } from "../redux/rootReducer";
 import {
   markAllShipmentAsSelected,
+  setShipments,
   toggleAddScanModal,
   toggleFilterModal,
 } from "../redux/slices/shipmentSlice";
+import { getShipmentsFn } from "../services/authService";
 
 export default function ShipmentListScreen() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const shipments = useSelector((state: RootState) => state.shipment.shipments);
+  const auth: any = useSelector((state: RootState) => state.auth);
 
+  const loadShipments = async () => {
+    setIsLoading(true);
+
+    try {
+      const response: any = await getShipmentsFn();
+
+      if (response.status === 200) {
+        const data: any = [];
+        response.data.message.forEach((d: any, i: number) => {
+          data.push({ ...d, id: i, selected: false });
+        });
+        dispatch(setShipments(data));
+      } else {
+        Alert.alert(response.response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error loading shipments");
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    loadShipments();
+  }, []);
+  const handleSelectAll = () => {};
   return (
     <View style={tw`flex-1 px-[16px] bg-white`}>
       <View style={tw`flex-row justify-between items-center`}>
@@ -39,13 +74,12 @@ export default function ShipmentListScreen() {
       <View style={tw`mt-[12px]`}>
         <Text style={tw`text-[14px] text-black/60`}>Hello,</Text>
         <Text style={[tw`text-[28px]`, { fontWeight: "semibold" }]}>
-          Ibrahim Shaker
+          {auth.user || "Ibrahim Shaker"}
         </Text>
 
         <AppSearch
           placeholder="Search"
           onChangeText={(value) => console.log(value)}
-          // value=""
         />
 
         <View style={tw`flex-row justify-between mt-[12px]`}>
@@ -84,7 +118,7 @@ export default function ShipmentListScreen() {
             onChange={() => {
               dispatch(markAllShipmentAsSelected());
             }}
-            checked={false}
+            checkStyles={{ color: "#fff" }}
           />
         </View>
       </View>
@@ -92,10 +126,12 @@ export default function ShipmentListScreen() {
       <FlatList
         style={tw`mt-[12px]`}
         data={shipments}
-        keyExtractor={(item: any) => item.id.toString()}
+        keyExtractor={(item: any) => item.id}
         renderItem={({ item }: any) => <ShipmentCard data={item} />}
-        refreshing={false}
-        onRefresh={() => {}}
+        refreshing={isLoading}
+        onRefresh={() => {
+          loadShipments();
+        }}
       />
     </View>
   );

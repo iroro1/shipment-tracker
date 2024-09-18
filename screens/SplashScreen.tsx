@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { View, Image } from "react-native";
 import { MotiView } from "moti";
 import tw from "twrnc";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../types";
 
 export default function SplashScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     const timeout = setTimeout(() => {

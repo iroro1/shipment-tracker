@@ -15,41 +15,40 @@ export const loginFn = async (usr: string, pwd: string) => {
 
 export const getShipmentsStatusFn = async () => {
   try {
-    return await axios.get(`${baseUrl}frappe.client.get_list`);
+    return await axios.post(
+      `${baseUrl}frappe.client.get_list`,
+      {
+        doctype: "AWB Status",
+        fields: ["*"],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     return error;
   }
 };
 
-export const getShipmentsFn = async ({
-  doctype,
-  fields,
-  filters,
-}: {
-  doctype: string;
-  fields: string[];
-  filters: { name: string };
-}) => {
-  /**
-     {
-         "doctype":"AWB",
-         "fields": ["*"],
-         "filters": {
-             "name": ["like", "%add_search_term_here%"]
-         }
-     }
-     * 
-     */
-
+export const getShipmentsFn = async () => {
   try {
-    return await axios.get(`${baseUrl}frappe.client.get_list`, {
-      params: {
-        doctype,
-        fields,
-        filters,
+    const response = await axios.post(
+      `${baseUrl}frappe.client.get_list`,
+      {
+        doctype: "AWB",
+        fields: ["*"],
       },
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response;
   } catch (error) {
-    return error;
+    console.error("Error fetching AWB list:", error);
   }
 };

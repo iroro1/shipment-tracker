@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, Button, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/slices/authSlice";
 import tw from "twrnc";
-import Icon from "react-native-vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import AppInput from "./AppInput";
 import AppButton from "./AppButton";
+import { RootStackParamList } from "../types";
+import { loginFn } from "../services/authService";
 export default function LoginComponent({
   closeModal,
 }: {
@@ -16,13 +25,25 @@ export default function LoginComponent({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const handleLogin = () => {
-    // const user = { username };
-    // dispatch(login(user));
-    navigation.navigate("ShipmentList");
-    closeModal();
-    // Navigate to ShipmentList screen
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [isLoading, setIsLoading] = useState(false);
+  const handleLogin = async () => {
+    // test@brandimic.com
+    // testy123@
+    setIsLoading(true);
+    try {
+      const response: any = await loginFn(username, password);
+      if (response?.status === 200) {
+        dispatch(login(response.data.full_name));
+        navigation.navigate("ShipmentList");
+        closeModal();
+      } else {
+        Alert.alert(response.response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
   };
   const disabled = url === "" || username === "" || password === "";
   return (
@@ -31,7 +52,7 @@ export default function LoginComponent({
         onPress={() => closeModal()}
         style={tw` top-0 left-0 py-4 flex flex-row w-full items-center gap-[3px]`}
       >
-        <Icon name="chevron-back" size={24} color="#4561DB" />
+        <Ionicons name="chevron-back" size={24} color="#4561DB" />
         <Text style={tw`text-[#4561DB] text-[17px]`}>Cancel</Text>
       </TouchableOpacity>
       <Text
@@ -76,6 +97,7 @@ export default function LoginComponent({
           disabled={disabled}
           diabledBg="#EAE7F2"
           disabledColor="#A7A3B3"
+          loading={isLoading}
         />
       </View>
     </View>

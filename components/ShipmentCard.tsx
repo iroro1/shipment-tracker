@@ -6,28 +6,39 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import tw from "twrnc";
 import AppCheckbox from "./AppCheckbox";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { toggleSelectShipment } from "../redux/slices/shipmentSlice";
+import { getShipmentsStatusFn } from "../services/authService";
 
-const ShipmentCard = ({
-  data,
-}: {
-  data: { id: number; name: string; status: string; selected: boolean };
-}) => {
+const ShipmentCard = ({ data }: { data: any }) => {
   const dispatch = useDispatch();
   const [isExpanded, setIsExpanded] = useState(false);
-  const generateRandomNumbers = (len: number) => {
-    // generate random numbers matching len use Math.Random
-    const numbers = [];
-    for (let i = 0; i < len; i++) {
-      numbers.push(Math.floor(Math.random() * 10));
-    }
-    return numbers.join("");
+  const [status, setStatus] = useState();
+
+  const loadStatusData = async () => {
+    try {
+      const response: any = await getShipmentsStatusFn();
+      console.log(response.response.message, "fil");
+
+      if (response.status === 200) {
+        // const stat = response.response.message.filter(
+        //   (itm: any) => itm.name === data.status
+        // );
+        // console.log(stat, 222);
+        // setStatus(stat);
+      }
+    } catch (error) {}
   };
+  useEffect(() => {
+    loadStatusData();
+  }, []);
+
+  // console.log(status, 2);
+
   return (
     <View
       style={tw`min-h-[67px] w-full rounded-[8px] border border-[${
@@ -51,35 +62,40 @@ const ShipmentCard = ({
             onChange={() => {
               dispatch(toggleSelectShipment(data?.id));
             }}
+            useDefault={true}
           />
           <Image
             resizeMode="contain"
             style={tw`w-[40px] h-[40px]`}
             source={require("../assets/images/box1.png")}
           />
-          <View style={tw`ml-[14px]`}>
-            <Text style={tw`text-[13px] text-[#3F395C]`}>{data.name}</Text>
-            <Text style={tw`text-[18px] text-[#000]`}>
-              {generateRandomNumbers(11)}
+          <View style={tw`ml-[7px]`}>
+            <Text style={tw`text-[13px] text-[#3F395C]`}>{"AWB"}</Text>
+            <Text style={tw`text-[18px] text-[#000] font-bold`}>
+              {data.barcode}
             </Text>
             <View style={tw`flex-row items-center gap-[8px]`}>
-              <Text style={tw`text-[11px] text-[#757281]`}>Cairo</Text>
+              <Text style={tw`text-[11px] text-[#757281]`}>
+                {data.origin_city}
+              </Text>
               <Ionicons name="arrow-forward" size={16} color="#2F50C1" />
-              <Text style={tw`text-[11px] text-[#757281]`}>Aswan</Text>
+              <Text style={tw`text-[11px] text-[#757281]`}>
+                {data.destination_city}
+              </Text>
             </View>
           </View>
         </View>
-        <View style={tw`ml-auto flex-row items-center gap-2`}>
+        <View style={tw`ml-auto flex-row items-center gap-1`}>
           <View
             style={tw`flex-row items-center gap-1 h-[23px] border border-[#D0D5DD] rounded-[4px] p-1`}
           >
-            <Text style={tw`text-[11px]`}>CANCELED</Text>
+            <Text style={tw`text-[10px]`}>{data.status}</Text>
           </View>
 
           <TouchableOpacity
             onPress={() => setIsExpanded(!isExpanded)}
             style={[
-              tw`h-[40px] w-[40px] ${
+              tw`h-[30px] w-[30px] ${
                 isExpanded
                   ? "bg-[#2F50C1]/70 border-[4px] border-white"
                   : "bg-white"
@@ -91,12 +107,12 @@ const ShipmentCard = ({
           >
             <Ionicons
               name="arrow-forward"
-              size={14}
+              size={10}
               color={isExpanded ? "white" : "#2F50C1"}
             />
             <Ionicons
               name="arrow-back"
-              size={14}
+              size={10}
               color={isExpanded ? "white" : "#2F50C1"}
             />
           </TouchableOpacity>
@@ -105,25 +121,32 @@ const ShipmentCard = ({
       {isExpanded && (
         <View
           style={[
-            tw` p-[12px] z-10  rounded-b-[8px] ${
-              data?.selected ? "border-t" : "border-0"
-            } border-[#2F50C1] bg-[#fff]`,
+            tw` p-[12px] z-10  rounded-b-[8px]  border-[#2F50C1] bg-[#fff]`,
+            {
+              borderStyle: "dashed",
+              borderColor: "#2F50C1",
+              borderWidth: data?.selected ? 1 : 0,
+            },
           ]}
         >
           <View style={tw`flex-row items-center justify-between`}>
             <View>
               <Text style={tw`text-[11px] text-[#2F50C1]`}>Origin</Text>
-              <Text style={tw`text-[13px] text-[#333]`}>Cairo</Text>
+              <Text style={tw`text-[13px] text-[#333]`}>
+                {data.origin_country}
+              </Text>
               <Text style={tw`text-[13px] text-[#757281]`}>
-                Dokki, 22 Nile St.
+                {data.origin_city}, {data.origin_zone}
               </Text>
             </View>
             <Ionicons name="arrow-forward" size={20} color="#2F50C1" />
             <View>
               <Text style={tw`text-[11px] text-[#2F50C1]`}>Destination</Text>
-              <Text style={tw`text-[13px] text-[#333]`}>Alexandria</Text>
+              <Text style={tw`text-[13px] text-[#333]`}>
+                {data.destination_country}
+              </Text>
               <Text style={tw`text-[13px] text-[#757281]`}>
-                Smoha, 22 max St.
+                {data.destination_city}, {data.destination_zone}
               </Text>
             </View>
           </View>
