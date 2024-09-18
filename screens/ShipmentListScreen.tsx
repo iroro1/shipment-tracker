@@ -28,7 +28,7 @@ export default function ShipmentListScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const shipments = useSelector((state: RootState) => state.shipment.shipments);
   const auth: any = useSelector((state: RootState) => state.auth);
-  const [temp, setTemp] = useState([]);
+  const [temp, setTemp] = useState<any>([]);
 
   const loadShipments = async () => {
     setIsLoading(true);
@@ -84,7 +84,9 @@ export default function ShipmentListScreen() {
         <AppSearch
           placeholder="Search"
           onChangeText={(value) => {
-            setTemp(shipments.filter((itm) => itm.barcode.includes(value)));
+            setTemp(
+              shipments.filter((itm: any) => itm.barcode.includes(value))
+            );
           }}
         />
 
