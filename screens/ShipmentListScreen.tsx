@@ -84,9 +84,14 @@ export default function ShipmentListScreen() {
         <AppSearch
           placeholder="Search"
           onChangeText={(value) => {
-            setTemp(
-              shipments.filter((itm: any) => itm.barcode.includes(value))
-            );
+            temp.length === 0 && setTemp(shipments);
+            shipments.length === 0 && dispatch(setShipments(temp));
+            shipments.length > 0 &&
+              dispatch(
+                setShipments(
+                  shipments.filter((itm: any) => itm.barcode.includes(value))
+                )
+              );
           }}
         />
 
@@ -146,7 +151,7 @@ export default function ShipmentListScreen() {
 
       <FlatList
         style={tw`mt-[12px]`}
-        data={temp.length > 0 ? temp : shipments}
+        data={shipments}
         keyExtractor={(item: any) => item.id}
         renderItem={({ item }: any) => <ShipmentCard data={item} />}
         refreshing={isLoading}
