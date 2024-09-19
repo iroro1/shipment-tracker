@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Animated, TextInput, View, Text } from "react-native";
-import tw from "twrnc";
 import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, TextInput, View } from "react-native";
+import tw from "twrnc";
 
 const AppSearch = ({
   value,

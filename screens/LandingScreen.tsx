@@ -1,10 +1,10 @@
-import { Image, Modal, StyleSheet, Text, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import { Image, Modal, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "twrnc";
 import AppButton from "../components/AppButton";
-import { StatusBar } from "expo-status-bar";
 import LoginComponent from "../components/LoginComponent";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const LandingScreen = () => {
   const [loginModal, setLoginModal] = useState(false);
@@ -39,7 +39,7 @@ const LandingScreen = () => {
       >
         <View
           style={{
-            marginTop: 60,
+            marginTop: 30,
             flex: 1,
           }}
         >

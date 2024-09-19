@@ -1,11 +1,10 @@
+import React from "react";
 import {
   ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
 } from "react-native";
-import React from "react";
 import tw from "twrnc";
 const AppButton = ({
   title = "Button",
@@ -58,5 +57,3 @@ const AppButton = ({
 };
 
 export default AppButton;
-
-const styles = StyleSheet.create({});

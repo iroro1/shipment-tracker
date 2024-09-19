@@ -1,31 +1,29 @@
-// src/navigation/BottomTabNavigator.tsx
-import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useState } from "react";
 import ShipmentListScreen from "../screens/ShipmentListScreen";
-// import AnotherScreen from "../screens/AnotherScreen";
-// import NotificationScreen from "../screens/NotificationScreen";
-// import ProfileScreen from "../screens/ProfileScreen";
-import { Ionicons } from "@expo/vector-icons"; // or react-native-vector-icons
+
+import { Ionicons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
 import {
+  Image,
   Modal,
   Pressable,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/rootReducer";
 import tw from "twrnc";
+import useCamera from "../hooks/useCamera";
+import { RootState } from "../redux/rootReducer";
 import {
   toggleAddScanModal,
   toggleFilterModal,
 } from "../redux/slices/shipmentSlice";
+import Profile from "../screens/Profile";
 import ScanScreen from "../screens/ScanScreen";
 import WalletScreen from "../screens/WalletScreen";
-import Profile from "../screens/Profile";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
@@ -42,6 +40,18 @@ export default function BottomTabNavigator() {
     { selected: false, status: "Lost" },
     { selected: false, status: "On Hold" },
   ]);
+  const [upload, setUpload] = useState(null);
+  const { pickImage, camera } = useCamera();
+  const galleryFn = async () => {
+    await pickImage((e: any) => {
+      setUpload(e?.img);
+    });
+  };
+  const cameraFn = async () => {
+    await camera((e: any) => {
+      setUpload(e?.img);
+    });
+  };
   return (
     <>
       <Modal visible={fiterModalOpen} animationType="slide" transparent>
@@ -58,7 +68,7 @@ export default function BottomTabNavigator() {
               style={tw`w-full  h-[4px] px-[16px] flex mt-2 justify-center items-center`}
               onPress={() => dispatch(toggleFilterModal())}
             >
-              <View style={tw`w-[28px] rounded-full h-[4px] bg-gray-400`} />
+              <View style={tw`w-[36px] rounded-full h-[5px] bg-gray-400`} />
             </Pressable>
             <View
               style={tw`w-full h-[50px] mt-0 border-b border-gray-300  flex-row justify-between items-center w-full px-[16px]`}
@@ -120,8 +130,63 @@ export default function BottomTabNavigator() {
             onPress={() => dispatch(toggleAddScanModal())}
           />
           <View
-            style={tw`w-full  z-10 h-[300px] bg-white mt-auto rounded-t`}
-          ></View>
+            style={tw`w-full  z-10 h-${
+              upload ? "[80%]" : "[300px]"
+            } bg-white/97 mt-auto rounded-t flex justify-center items-center relative gap-4`}
+          >
+            <View
+              style={tw`flex-row justify-between w-full px-[16px] absolute top-4`}
+            >
+              <Pressable
+                onPress={() => {
+                  dispatch(toggleAddScanModal());
+                  setUpload(null);
+                }}
+              >
+                <Text style={tw`text-[#2F50C1] text-[16px] w-[70px]`}>
+                  Cancel
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  dispatch(toggleAddScanModal());
+                }}
+              >
+                <Text style={tw`text-[#2F50C1] text-[16px] w-[40px]`}>
+                  Done
+                </Text>
+              </Pressable>
+            </View>
+            {upload && (
+              <View style={tw`h-[60%] w-full px-[16px] overflow-hidden`}>
+                <Image
+                  resizeMode="cover"
+                  style={tw`h-full w-full rounded-lg`}
+                  source={{
+                    uri: upload,
+                  }}
+                />
+              </View>
+            )}
+            <View style={tw`w-full flex-row justify-center gap-4`}>
+              <View style={tw`border border-gray-400 rounded-4 p-4`}>
+                <Ionicons
+                  onPress={galleryFn}
+                  name="file-tray"
+                  size={40}
+                  color="#2F50C1"
+                />
+              </View>
+              <View style={tw`border border-gray-400 rounded-4 p-4`}>
+                <Ionicons
+                  onPress={cameraFn}
+                  name="camera"
+                  size={40}
+                  color="#2F50C1"
+                />
+              </View>
+            </View>
+          </View>
         </View>
       </Modal>
       <SafeAreaView style={tw`flex-1 bg-white`}>
@@ -151,6 +216,11 @@ export default function BottomTabNavigator() {
             tabBarItemStyle: {
               paddingTop: 8,
               height: 50,
+              width: "25%",
+              paddingBottom: 4,
+            },
+            tabBarLabelStyle: {
+              width: 200,
             },
           })}
         >

@@ -2,7 +2,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import LandingScreen from "../screens/LandingScreen";
-import ShipmentListScreen from "../screens/ShipmentListScreen";
 import SplashScreen from "../screens/SplashScreen";
 import BottomTabNavigator from "./BottomTabNavigator";
 

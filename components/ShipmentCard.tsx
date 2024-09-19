@@ -1,28 +1,20 @@
-import {
-  Button,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import tw from "twrnc";
-import AppCheckbox from "./AppCheckbox";
 import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch } from "react-redux";
+import tw from "twrnc";
 import { toggleSelectShipment } from "../redux/slices/shipmentSlice";
 import { getShipmentsStatusFn } from "../services/authService";
+import AppCheckbox from "./AppCheckbox";
+import DashedLines from "./DashedLines";
 
 const ShipmentCard = ({ data }: { data: any }) => {
   const dispatch = useDispatch();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [status, setStatus] = useState();
 
   const loadStatusData = async () => {
     try {
       const response: any = await getShipmentsStatusFn();
-      console.log(response.response.message, "fil");
 
       if (response.status === 200) {
       }
@@ -67,17 +59,25 @@ const ShipmentCard = ({ data }: { data: any }) => {
               {data.barcode}
             </Text>
             <View style={tw`flex-row items-center gap-[8px]`}>
-              <Text style={tw`text-[11px] text-[#757281]`}>
+              <Text
+                style={tw`text-[11px] text-[#757281] w-[${
+                  data.origin_city.length * 2
+                }]`}
+              >
                 {data.origin_city}
               </Text>
               <Ionicons name="arrow-forward" size={16} color="#2F50C1" />
-              <Text style={tw`text-[11px] text-[#757281]`}>
+              <Text
+                style={tw`text-[11px] text-[#757281] w-[${
+                  data.destination_city.length * 2
+                }]`}
+              >
                 {data.destination_city}
               </Text>
             </View>
           </View>
         </View>
-        <View style={tw`ml-auto flex-row items-center gap-[0.6px]`}>
+        <View style={tw`ml-auto flex-row items-center gap-[6px]`}>
           <View
             style={tw`flex-row items-center gap-1 h-[23px] border border-[#D0D5DD] rounded-[4px] p-1`}
           >
@@ -113,29 +113,40 @@ const ShipmentCard = ({ data }: { data: any }) => {
       {isExpanded && (
         <View
           style={[
-            tw` p-[12px] z-50  rounded-b-[8px] border bg-[#F4F2F8]/40 border-r-0 border-l-0 border-b-0 ${
-              data.selected ? "border-[#2F50C1]" : "border-[#eee]"
-            }`,
+            tw` p-[12px] z-50  rounded-b-[8px]  bg-[#F4F2F8]/40 w-full relative`,
           ]}
         >
+          {data.selected && (
+            <DashedLines color="#2F50C1" dashLength={26} dashGap={7} />
+          )}
           <View style={tw`flex-row items-center justify-between`}>
             <View>
               <Text style={tw`text-[11px] text-[#2F50C1]`}>Origin</Text>
-              <Text style={tw`text-[13px] text-[#333]`}>
-                {data.origin_country}
+              <Text style={tw`text-[13px] text-[#333] font-bold`}>
+                {data.origin_city}
               </Text>
-              <Text style={tw`text-[13px] text-[#757281]`}>
-                {data.origin_city}, {data.origin_zone}
+              <Text
+                style={tw`text-[13px] text-[#757281] w-[${
+                  (data.origin_state.length + data.origin_zone.length) * 2.2
+                }]`}
+              >
+                {data.origin_state}, {data.origin_zone}
               </Text>
             </View>
             <Ionicons name="arrow-forward" size={20} color="#2F50C1" />
             <View>
               <Text style={tw`text-[11px] text-[#2F50C1]`}>Destination</Text>
-              <Text style={tw`text-[13px] text-[#333]`}>
-                {data.destination_country}
+              <Text style={tw`text-[13px] text-[#333] font-bold`}>
+                {data.destination_city}
               </Text>
-              <Text style={tw`text-[13px] text-[#757281]`}>
-                {data.destination_city}, {data.destination_zone}
+              <Text
+                style={tw`text-[13px] text-[#757281]  w-[${
+                  (data.destination_state.length +
+                    data.destination_zone.length) *
+                  2.2
+                }]`}
+              >
+                {data.destination_state}, {data.destination_zone}
               </Text>
             </View>
           </View>
@@ -145,7 +156,7 @@ const ShipmentCard = ({ data }: { data: any }) => {
               style={tw`flex-row items-center justify-center gap-2 bg-[#2F50C1]/80 w-[100px] h-[40px] rounded-[8px]`}
             >
               <Ionicons name="call" size={20} color="#fff" />
-              <Text style={tw`text-[17px] text-[#fff]`}>Call</Text>
+              <Text style={tw`text-[17px] text-[#fff] w-[40px]`}>Call</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={tw`flex-row items-center justify-center gap-2 bg-green-500 w-[150px] h-[40px] rounded-[8px]`}

@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import tw from "twrnc";
-import AppCheckbox from "../components/AppCheckbox";
 import AppSearch from "../components/AppSearch";
 import ShipmentCard from "../components/ShipmentCard";
 import { RootState } from "../redux/rootReducer";
@@ -55,8 +54,6 @@ export default function ShipmentListScreen() {
   useEffect(() => {
     loadShipments();
   }, []);
-
-  console.log(temp);
 
   return (
     <View style={tw`flex-1 px-[16px] bg-white`}>
@@ -104,7 +101,7 @@ export default function ShipmentListScreen() {
               style={tw`w-[24px] h-[24px]`}
               source={require("../assets/images/filter.png")}
             />
-            <Text>Filters</Text>
+            <Text style={tw`w-[60px]`}>Filters</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => dispatch(toggleAddScanModal())}
@@ -115,7 +112,7 @@ export default function ShipmentListScreen() {
               source={require("../assets/images/scan.png")}
               resizeMode="contain"
             />
-            <Text style={tw`text-white text-[16px]`}>Add Scan</Text>
+            <Text style={tw`text-white text-[16px] w-[80px]`}>Add Scan</Text>
           </TouchableOpacity>
         </View>
 
@@ -144,7 +141,9 @@ export default function ShipmentListScreen() {
                 <Text style={[styles.checkmark]}>✓</Text>
               </View>
             </View>
-            <Text style={tw`ml-2 text-[#2F50C1] text-[16px]`}>Mark All</Text>
+            <Text style={tw`ml-2 text-[#2F50C1] text-[16px] w-[65px]`}>
+              Mark All
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

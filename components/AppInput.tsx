@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Animated, TextInput, View, Text } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, Text, TextInput, View } from "react-native";
 import tw from "twrnc";
 
 const AppInput = ({
@@ -26,11 +26,9 @@ const AppInput = ({
     }).start();
   }, [value, isFocused]);
 
-  // Determine border color based on focus state only
   const borderColor = isFocused ? "#2F50C1" : "#F4F2F8";
 
   const handleChangeText = (text: string) => {
-    // Convert text to lowercase if type is not 'password'
     const processedText = type !== "password" ? text.toLowerCase() : text;
     onChangeText(processedText);
   };
@@ -39,7 +37,7 @@ const AppInput = ({
     <View style={tw`relative w-full`}>
       <Animated.Text
         style={[
-          tw`absolute left-[14px] text-[11px] px-[4px] ${
+          tw`absolute left-[14px] text-[11px] min-w-full px-[4px] ${
             isFocused ? "z-10" : ""
           }`,
           {
@@ -69,7 +67,7 @@ const AppInput = ({
           type === "url" && isFocused ? { paddingLeft: 80 } : {},
         ]}
         value={value}
-        onChangeText={handleChangeText} // Updated function
+        onChangeText={handleChangeText}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholderTextColor={"#A7A3B3"}
